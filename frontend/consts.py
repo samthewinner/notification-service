@@ -1,0 +1,2 @@
+METADATA_SERVICE_ENDPOINT = 'http://localhost:9090'
+TEMPORARY_STORAGE_ENDPOINT = 'http://localhost:7070'
