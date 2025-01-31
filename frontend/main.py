@@ -12,8 +12,9 @@ async def main():
     await task_manager.wait_for_completion()
 
     await web_service.serve(
-        host="localhost",
+        host="0.0.0.0",
         port=8000
     )
 
-asyncio.run(main())
+if __name__ == "__main__":
+    asyncio.run(main())
