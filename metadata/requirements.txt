@@ -1,0 +1,8 @@
+redis
+fastapi
+uvicorn
+pydantic
+requests
+
+pymongo  # synchronous
+motor  # asynchronous

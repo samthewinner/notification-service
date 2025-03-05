@@ -1,0 +1,7 @@
+FRONT_END_SERVICE_ENDPOINT = 'http://frontend:8000'
+
+MONGODB_HOST = 'mongodb'
+MONGODB_PORT = 27017
+
+KAFKA_HOST = 'kafka'
+KAFKA_PORT = 9092
