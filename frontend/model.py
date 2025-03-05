@@ -4,7 +4,6 @@ between frontend and metadata service.
 """
 
 from pydantic import BaseModel
-from uuid import uuid4
 
 
 class User(BaseModel):
@@ -18,7 +17,8 @@ class User(BaseModel):
     name : str
         The name of the user
     """
-    id: uuid4
+
+    id: str
     name: str
 
 
@@ -31,6 +31,7 @@ class Topic(BaseModel):
     topic: str
         The name of the topic
     """
+
     topic: str
 
 
@@ -45,6 +46,7 @@ class Publish(BaseModel):
     message : str
         The message to be published
     """
+
     topic: str
     message: str
 
@@ -60,6 +62,7 @@ class Subscribe(BaseModel):
     user : User
         The user to subscribe
     """
+
     topic: str
     user: User
 
@@ -75,6 +78,7 @@ class Task:
     data : Topic | Publish | Subscribe | User
         The data of the task
     """
+
     def __init__(self, type: str, data: Topic | Publish | Subscribe | User):
         self.type = type
         self.data = data
