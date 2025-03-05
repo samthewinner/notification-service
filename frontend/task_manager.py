@@ -55,17 +55,11 @@ class TaskManager:
 
     async def process_task(self, task):
         if task.type == 'create':
-            # this will create a new topic on the
-            # metadata service and will have zero
-            # subscribers initially
-            self.metadata_service.post('/create', task.data.dict())
+            self.metadata_service.post('/create/', task.data.dict())
             print("Response: ", "Create topic response")
 
         elif task.type == 'delete':
-            # this will delete a topic from the
-            # metadata service and will remove all
-            # subscribers
-            self.metadata_service.post('/delete', task.data.dict())
+            self.metadata_service.post('/delete/', task.data.dict())
             print("Response: ", "Delete topic response")
 
         elif task.type == 'publish':
@@ -95,15 +89,11 @@ class TaskManager:
             print("Response: ", "Publish message response")
 
         elif task.type == 'subscribe':
-            # this will subscribe a user to a topic
-            # on the metadata service
-            self.metadata_service.post('/subscribe', task.data.dict())
+            self.metadata_service.post('/subscribe/', task.data.dict())
             print("Response: ", "Subscribe user response")
 
         elif task.type == 'unsubscribe':
-            # this will unsubscribe a user from a topic
-            # on the metadata service
-            self.metadata_service.post('/unsubscribe', task.data.dict())
+            self.metadata_service.post('/unsubscribe/', task.data.dict())
             print("Response: ", "Unsubscribe user response")
 
         else:

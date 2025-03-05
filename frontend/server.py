@@ -4,10 +4,9 @@ Server
 This module contains the server implementation
 """
 
-from fastapi import FastAPI
 import uvicorn
-
-from model import Task, Publish, Subscribe, Topic
+from fastapi import FastAPI
+from model import Publish, Subscribe, Task, Topic
 from task_manager import TaskManager
 
 
@@ -31,34 +30,28 @@ class Server:
         @self.app.post("/delete/")
         def delete_topic(topic: Topic):
             task = Task("delete", topic)
-            self.task_manager.add_task(task)
+            self.task_manager.add_task_sync(task)
             return {"topic deleted": topic.topic}
 
         @self.app.post("/publish/")
         def publish(publish: Publish):
             task = Task("publish", publish)
             self.task_manager.add_task_sync(task)
-            return {
-                "topic published": publish.topic,
-                "message": publish.message
-            }
+            return {"topic published": publish.topic, "message": publish.message}
 
         @self.app.post("/subscribe/")
         def subscribe(subscribe: Subscribe):
             task = Task("subscribe", subscribe)
-            self.task_manager.add_task(task)
-            return {
-                "topic subscribed": subscribe.topic,
-                "subscriber": subscribe.user
-            }
+            self.task_manager.add_task_sync(task)
+            return {"topic subscribed": subscribe.topic, "subscriber": subscribe.user}
 
         @self.app.post("/unsubscribe/")
-        def unsubscribe(subscribe: Subscribe):
-            task = Task("unsubscribe", subscribe)
-            self.task_manager.add_task(task)
+        def unsubscribe(unsubscribe: Subscribe):
+            task = Task("unsubscribe", unsubscribe)
+            self.task_manager.add_task_sync(task)
             return {
-                "topic unsubscribed": subscribe.topic,
-                "subscriber": subscribe.user
+                "topic unsubscribed": unsubscribe.topic,
+                "subscriber": unsubscribe.user,
             }
 
     async def run(self, host: str = "localhost", port: int = 8000):
