@@ -1,0 +1,10 @@
+SELF_HOST = "sender"
+SELF_PORT = 10000
+
+METADATA_SERVICE_ENDPOINT = "http://metadata:9000"
+
+KAFKA_HOST = "kafka"
+KAFKA_PORT = 9092
+
+RMQ_HOST = "rabbitmq"
+RMQ_PORT = 5672
