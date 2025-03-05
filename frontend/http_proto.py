@@ -14,9 +14,17 @@ class HTTPProto(Protocol):
         self.url = url
 
     def get(self, endpoint: str):
-        response = requests.get(self.url + endpoint)
+        try:
+            response = requests.get(self.url + endpoint)
+        except Exception as e:
+            print(f"Error occurred while sending GET request: {e}")
+            return {"status": "failed", "error": str(e)}
         return response
 
     def post(self, endpoint: str, data: dict):
-        response = requests.post(self.url + endpoint, json=data)
+        try:
+            response = requests.post(self.url + endpoint, json=data)
+        except Exception as e:
+            print(f"Error occurred while sending POST request: {e}")
+            return {"status": "failed", "error": str(e)}
         return response
