@@ -1,2 +1,4 @@
 METADATA_SERVICE_ENDPOINT = 'http://metadata:9000'
 
+KAFKA_HOST = 'kafka'
+KAFKA_PORT = 9092

@@ -8,20 +8,36 @@ temporary storage based on the task type.
 """
 
 import asyncio
+import time
+
+from http_proto import HTTPProto
+from kafka import KafkaProducer
 
 from consts import (
     METADATA_SERVICE_ENDPOINT,
-    TEMPORARY_STORAGE_ENDPOINT,
+    KAFKA_HOST,
+    KAFKA_PORT
 )
-from http_proto import HTTPProto
-
 
 class TaskManager:
     def __init__(self):
         self.queue = asyncio.Queue()
         self.tasks = []
         self.metadata_service = HTTPProto(METADATA_SERVICE_ENDPOINT)
-        self.temporary_storage = HTTPProto(TEMPORARY_STORAGE_ENDPOINT)
+        self.kafka_producer = self.create_kafka_producer()
+
+    def create_kafka_producer(self):
+        for _ in range(5):
+            try:
+                producer = KafkaProducer(
+                    bootstrap_servers=f'{KAFKA_HOST}:{KAFKA_PORT}',
+                    value_serializer=lambda v: v.encode('utf-8')
+                )
+                return producer
+            except Exception as e:
+                print(f"Failed to connect to Kafka: {e}")
+                time.sleep(2)  # Wait before retrying
+        print("Could not connect to Kafka after multiple attempts")
 
     def add_task_sync(self, task):
         self.queue.put_nowait(task)
@@ -84,9 +100,20 @@ class TaskManager:
             # print(expensive_function(3))  # Calculating for 3
             # print(expensive_function(1))  # Cached result for 1
             # print(expensive_function(4))  # Calculating for 4, evicts least recently used (2)
-
-            self.metadata_service.post('/publish', task.data.dict())
-            print("Response: ", "Publish message response")
+            try:
+                print("Sending message to Kafka")
+                print(task)
+                data = task.data
+                # instead of sending messages based on kafka topics, use generic topics like
+                # normal, urgent, low-priority and the value will send message and topic.
+                self.kafka_producer.send(
+                    topic=data.topic,
+                    value=data.message
+                )
+                print("Message sent to Kafka")
+                self.kafka_producer.flush()
+            except Exception as e:
+                print(f"Error publishing message: {e}")
 
         elif task.type == 'subscribe':
             self.metadata_service.post('/subscribe/', task.data.dict())
